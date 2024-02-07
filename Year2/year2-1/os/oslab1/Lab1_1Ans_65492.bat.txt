@@ -1,0 +1,7 @@
+REM 65050492 นายบริพัตร จริยาทัศน์กร 
+REM 1.11 copy NUL test1.txt
+REM 1.12 copy c:\Users\acer\Desktop\oop\oslab1\sub\test1.txt test2.txt
+REM 1.13 md c:\User\acer\Desktop\oslab1\abc
+REM 1.16 del test2.txt
+REM 1.19 rd sub/s/q
+REM 1.20 System32

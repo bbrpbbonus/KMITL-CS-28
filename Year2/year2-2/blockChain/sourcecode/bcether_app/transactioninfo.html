@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <script type="module">
+            //import { ethers } from "./ethers.min.js"
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js"
+            window.ethers = ethers //set it as global variables 
+        </script>        
+        <script>
+           
+           async function getTransactionInfo() {
+                provider = new ethers.JsonRpcProvider('http://localhost:8545')
+                txh = document.getElementById('transactionhash').value 
+                try {
+                    transactionResponse = await provider.getTransaction(txh)
+                    transactionInfo =  transactionResponse.toJSON()   
+                    var str = '';
+                    for(var key in transactionInfo) {
+                        str += '<tr><td>' + key + '</td><td>' + JSON.stringify(transactionInfo[key]) + '</td></tr>'; 
+                    }
+                    document.getElementById('transactioninfo').innerHTML = '<table>' + str + '</table>';
+                }
+                catch(error) {
+                        document.getElementById('transactioninfo').innerHTML = error;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Transaction Information</h1>
+        <hr>
+        <label>Enter transaction hash: </label>
+        <input type="text" size = "100" id="transactionhash"/>
+        <br>
+        <button type="button" onclick="getTransactionInfo()">Get Transaction</button>
+        <hr>
+        <div id="transactioninfo"></div>
+    </body>
+</html>

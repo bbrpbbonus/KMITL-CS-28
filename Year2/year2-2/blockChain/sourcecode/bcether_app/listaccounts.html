@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script type="module">
+            //import { ethers } from "./ethers.min.js"
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js"
+            window.ethers = ethers //set it as global variables 
+        </script>
+        <script>
+            async function listAccounts() {
+                provider = new ethers.JsonRpcProvider('http://localhost:8545')    
+			    try {
+                    var accounts = await provider.listAccounts()
+                    var accountList = '';
+                        for (let i = 0; i < accounts.length; i++) {
+				             accountList += '<li>' + await accounts[i].getAddress() + '</li>';
+			            }
+                        document.getElementById('listOfAccounts').innerHTML = '<ol start="0">' + accountList + '</ol>';
+                    }
+                    catch (error) {
+                        document.getElementById('listOfAccounts').innerHTML =  error;
+                    }
+		        }
+               
+        </script>
+    </head>
+    <body>
+        <h1>Node 1</h1>
+        <button type="button" onclick="listAccounts()">List Account</button>
+        <br>
+        <div id="listOfAccounts"></div>
+    </body>
+</html>

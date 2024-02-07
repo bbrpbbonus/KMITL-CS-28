@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <script type="module">
+            //import { ethers } from "./ethers.min.js"
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js"
+            window.ethers = ethers
+        </script>
+        <script>
+            async function getCoinbaseInfo() {
+                try {
+                    provider = new ethers.JsonRpcProvider('http://localhost:8545')
+                    accounts = await provider.listAccounts()
+                    coinbaseAddr = await accounts[0].getAddress()
+                    document.getElementById('mainAddress').innerHTML = 'Address: ' + coinbaseAddr;
+                    await getCoinbaseBalance()
+                } 
+                catch (error) {
+                        document.getElementById('mainAddress').innerHTML = error      
+                }
+            }
+            async function getCoinbaseBalance() {
+                try {
+                    balance = await provider.getBalance(coinbaseAddr)
+                    document.getElementById('mainBalance').innerHTML = 'balance: ' + ethers.formatUnits(balance, "ether") + ' ether' + ' ether';
+                }
+                catch(error) {
+                        document.getElementById('mainBalance').innerHTML = error;
+                }
+            }
+            async function send() {
+                to = document.getElementById('to').value
+                password = document.getElementById('password').value
+                amount = document.getElementById('amount').value;
+                try {
+                    await accounts[0].unlock(password)
+                    txHash = await accounts[0].sendTransaction({to: to, value: ethers.parseEther(amount)})
+                    document.getElementById('transactionHash').innerHTML = 'Transaction Hash: ' + txHash.hash;
+                }
+                catch (error) {
+                    document.getElementById('transactionHash').innerHTML = error;
+                }
+            }
+        </script>
+    </head>
+    <body onload="getCoinbaseInfo();">
+        <h1>Node 1</h1>
+        <h1>Money Transfer</h1>
+        <hr>
+        <h2>Main Account Info</h2>
+        <div id="mainAddress"></div>
+        <br>
+        <div id="mainBalance"></div>
+        <hr>
+        <label>Transfer to: </label>
+        <input type="text" size = "70" id="to"/>
+        <label>Amount (ether): </label>
+        <input type="text" id="amount"/>
+        <label>pass pharase: </label>
+        <input type="password" id="password"/>
+        <br>
+        <button type="button" onclick="send()">Send</button>
+        <hr>
+        <div id="transactionHash"></div>
+        
+    </body>
+</html>

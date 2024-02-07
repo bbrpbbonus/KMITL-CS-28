@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <!--script src="web3.min.js"></script-->
+        <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+        <script>
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+            var coinbaseAddr;            
+            async function getCoinbaseInfo() {
+                try {
+                    coinbaseAddr = await web3.eth.getCoinbase()
+                    document.getElementById('mainAddress').innerHTML = 'Address: ' + coinbaseAddr;
+                    await getCoinbaseBalance()
+                } 
+                catch (error) {
+                        document.getElementById('mainAddress').innerHTML = error      
+                }
+            }
+            async function getCoinbaseBalance() {
+                try {
+                    balance = await web3.eth.getBalance(coinbaseAddr)
+                    document.getElementById('mainBalance').innerHTML = 'balance: ' + web3.utils.fromWei(balance,"ether") + ' ether';
+                }
+                catch(error) {
+                        document.getElementById('mainBalance').innerHTML = error;
+                }
+            }
+            async function send() {
+                to = document.getElementById('to').value
+                password = document.getElementById('password').value
+                amount = document.getElementById('amount').value;
+                try {
+                    txHash = await web3.eth.personal.sendTransaction({from: coinbaseAddr, to: to, 
+                    value: web3.utils.toWei(amount, "ether")}, password)
+                    document.getElementById('transactionHash').innerHTML = 'Transaction Hash: ' + txHash;
+                }
+                catch (error) {
+                    document.getElementById('transactionHash').innerHTML = error;
+                }
+            }
+        </script>
+    </head>
+    <body onload="getCoinbaseInfo();">
+        <h1>Node 1</h1>
+        <h1>Money Transfer</h1>
+        <hr>
+        <h2>Main Account Info</h2>
+        <div id="mainAddress"></div>
+        <br>
+        <div id="mainBalance"></div>
+        <hr>
+        <label>Transfer to: </label>
+        <input type="text" size = "70" id="to"/>
+        <label>Amount (ether): </label>
+        <input type="text" id="amount"/>
+        <label>pass pharase: </label>
+        <input type="password" id="password"/>
+        <br>
+        <button type="button" onclick="send()">Send</button>
+        <hr>
+        <div id="transactionHash"></div>
+        
+    </body>
+</html>

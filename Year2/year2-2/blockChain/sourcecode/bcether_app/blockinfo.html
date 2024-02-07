@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <script type="module">
+            //import { ethers } from "./ethers.min.js"
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js"
+            window.ethers = ethers //set it as global variables 
+        </script>      
+        <script>
+            async function getBlockInfo(blockNumber) {
+                provider = new ethers.JsonRpcProvider('http://localhost:8545')
+                try {
+                    var block = await provider.getBlock(parseInt(blockNumber))
+                    var blockInfo = block.toJSON()
+                    var str = '';
+                    for(var key in blockInfo) {
+                        str += '<tr><td>' + key + '</td><td>' + JSON.stringify(blockInfo[key]) + '</td></tr>'; 
+                    }
+                    document.getElementById('blockinfo').innerHTML = '<table>' + str + '</table>';
+                }
+                catch (error) {
+                    document.getElementById('blockinfo').innerHTML = error;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Block Information</h1>
+        <hr>
+        <label>Enter Block Number: </label>
+        <input type="text" id="blocknumber"/>
+        <br>
+        <button type="button" onclick="getBlockInfo(document.getElementById('blocknumber').value)">Get Block Information</button>
+        <hr>
+        <div id="blockinfo"></div>
+    </body>
+</html>
